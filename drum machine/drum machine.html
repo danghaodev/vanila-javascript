@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drum machine</title>
+    <link rel="stylesheet" href="drum machine styles.css" />
+  </head>
+  <body>
+    <div class="container" id="drum-machine">
+      <div class="buttons">
+        <button class="drum-pad" id="drum-pad-Q" onclick="play('Q')">
+          Q
+          <audio
+            class="clip"
+            id="Q"
+            src="https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3"
+          ></audio>
+        </button>
+        <button class="drum-pad" id="drum-pad-W" onclick="play('W')">
+          W
+          <audio
+            class="clip"
+            id="W"
+            src="https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3"
+          ></audio>
+        </button>
+        <button class="drum-pad" id="drum-pad-E" onclick="play('E')">
+          E
+          <audio
+            class="clip"
+            id="E"
+            src="https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3"
+          ></audio>
+        </button>
+        <button class="drum-pad" id="drum-pad-A" onclick="play('A')">
+          A
+          <audio
+            class="clip"
+            id="A"
+            src="https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3"
+          ></audio>
+        </button>
+        <button class="drum-pad" id="drum-pad-S" onclick="play('S')">
+          S
+          <audio
+            class="clip"
+            id="S"
+            src="https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3"
+          ></audio>
+        </button>
+        <button class="drum-pad" id="drum-pad-D" onclick="play('D')">
+          D
+          <audio
+            class="clip"
+            id="D"
+            src="https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3"
+          ></audio>
+        </button>
+        <button class="drum-pad" id="drum-pad-Z" onclick="play('Z')">
+          Z
+          <audio
+            class="clip"
+            id="Z"
+            src="https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3"
+          ></audio>
+        </button>
+        <button class="drum-pad" id="drum-pad-X" onclick="play('X')">
+          X
+          <audio
+            class="clip"
+            id="X"
+            src="https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3"
+          ></audio>
+        </button>
+        <button class="drum-pad" id="drum-pad-C" onclick="play('C')">
+          C
+          <audio
+            class="clip"
+            id="C"
+            src="https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3"
+          ></audio>
+        </button>
+      </div>
+      <div class="screen">
+        <div class="btnPower">
+          <p>Power</p>
+          <button class="switch-btn" id="switchBtn" onclick="power()">
+            <span class="switch-btn-on">ON</span>
+            <span class="switch-btn-off">OFF</span>
+            <span class="switch-btn-slide"></span>
+          </button>
+        </div>
+        <div id="display"></div>
+        <div class="range-volume">
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value="100"
+            class="slider"
+            id="rangeVolume"
+          />
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const display = document.getElementById("display");
+      const switchBtn = document.getElementById("switchBtn");
+      const drumPad = document.querySelectorAll(".drum-pad");
+
+      document.querySelector(".slider").addEventListener("input", (event) => {
+        document
+          .querySelectorAll(".clip")
+          .forEach((item) => (item.volume = event.target.value / 100));
+        display.innerText = "Volume" + ":" + " " + event.target.value;
+        setTimeout(() => {
+          display.innerText = "";
+        }, 1500);
+      });
+      function play(str) {
+        if (!switchBtn.classList.contains("active")) {
+          if (str === "q" || str === "Q") {
+            display.innerText = "Rock on!";
+          } else if (str === "w" || str === "W") {
+            display.innerText = "Drum Roll!";
+          } else if (str === "e" || str === "E") {
+            display.innerText = "Music Time!";
+          } else if (str === "a" || str === "A") {
+            display.innerText = "Big Hit!";
+          } else if (str === "s" || str === "S") {
+            display.innerText = "Party On!";
+          } else if (str === "d" || str === "D") {
+            display.innerText = "Jamming on!";
+          } else if (str === "z" || str === "Z") {
+            display.innerText = "Popstarts!";
+          } else if (str === "x" || str === "X") {
+            display.innerText = "On the mood!";
+          } else if (str === "c" || str === "C") {
+            display.innerText = "On the rythm!";
+          }
+          var audio = document.getElementById(str);
+          audio.play();
+        }
+      }
+
+      window.document.onkeyup = function (event) {
+        let keystroke = event.key;
+        if (keystroke === "q" || keystroke === "Q") {
+          play("Q");
+        } else if (keystroke === "w" || keystroke === "W") {
+          play("W");
+        } else if (keystroke === "e" || keystroke === "E") {
+          play("E");
+        } else if (keystroke === "a" || keystroke === "A") {
+          play("A");
+        } else if (keystroke === "s" || keystroke === "S") {
+          play("S");
+        } else if (keystroke === "d" || keystroke === "D") {
+          play("D");
+        } else if (keystroke === "z" || keystroke === "Z") {
+          play("Z");
+        } else if (keystroke === "x" || keystroke === "X") {
+          play("X");
+        } else if (keystroke === "c" || keystroke === "C") {
+          play("C");
+        }
+      };
+
+      function power() {
+        switchBtn.classList.toggle("active");
+        if (switchBtn.classList.contains("active")) {
+          drumPad.forEach((drumPad) => {
+            drumPad.disabled = true;
+          });
+          document.getElementById("rangeVolume").disabled = true;
+        } else {
+          drumPad.forEach((drumPad) => {
+            drumPad.disabled = false;
+          });
+          document.getElementById("rangeVolume").disabled = false;
+        }
+      }
+    </script>
+  </body>
+</html>

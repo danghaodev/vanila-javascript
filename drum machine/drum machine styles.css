@@ -1,0 +1,106 @@
+:root {
+  --transition: all 0.3s linear;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #504c4c;
+}
+.container {
+  width: 800px;
+  height: 400px;
+  border: 5px solid yellow;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: #d3d0d0;
+}
+.container .buttons {
+  width: 100%;
+  height: 350px;
+  margin-left: 25px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-gap: 15px;
+}
+.container .buttons .drum-pad {
+  cursor: pointer;
+  background-color: #8d8888;
+  border-radius: 8px;
+  font-size: 35px;
+  box-shadow: 5px 5px 10px #444242;
+}
+.container .screen {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  justify-content: center;
+  align-items: center;
+}
+.container .screen div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container .screen .btnPower {
+  display: block;
+  text-align: center;
+  font-size: 25px;
+  padding-top: 10%;
+}
+.container .screen .btnPower .switch-btn {
+  position: relative;
+  width: 100px;
+  height: 30px;
+  font-size: 15px;
+}
+.container .screen .btnPower .switch-btn span {
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  text-align: center;
+  top: 0;
+}
+.container .screen .btnPower .switch-btn .switch-btn-on {
+  top: 20%;
+  left: 0;
+}
+.container .screen .btnPower .switch-btn .switch-btn-off {
+  top: 20%;
+  left: 50%;
+}
+.container .screen .btnPower .switch-btn .switch-btn-slide {
+  left: 50%;
+  background-color: #3734c5;
+  border-radius: 5px;
+  transition: var(--transition);
+}
+.container .screen .btnPower .switch-btn.active .switch-btn-slide {
+  left: 0;
+}
+.container .screen #display {
+  width: 320px;
+  height: 60px;
+  background-color: #504c4c;
+  border-radius: 20px;
+  transform: translateX(40px);
+  font-size: 50px;
+}
+.container .screen .range-volume input {
+  width: 70%;
+  height: 100%;
+  font-size: 45px;
+}
