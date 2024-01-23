@@ -1,0 +1,71 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+  --white-: #ffffff;
+  --purple-: #5a01a7;
+  --green-: #008000;
+}
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  background-color: #0a0a23;
+  color: var(--white-);
+}
+.container {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.palindrome-checker {
+  width: 410px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 25px;
+  margin-top: 25px;
+}
+label {
+  margin-top: 15px;
+  color: #0a0a23;
+}
+#text-input {
+  margin-top: 28px;
+  font-size: 22px;
+  border: none;
+  border-bottom: 2px solid var(--purple-);
+  width: 220px;
+  text-align: center;
+}
+#check-btn {
+  background-color: var(--purple-);
+  border: none;
+  color: var(--white-);
+  width: 85px;
+  height: 35px;
+  font-size: 15px;
+  border-radius: 12px;
+}
+#result {
+  margin-top: 18px;
+  font-size: 28px;
+  color: #0a0a23;
+}
+.palindrome-definition {
+  margin-top: 25px;
+  background-color: var(--green-);
+  width: 410px;
+  height: 200px;
+  padding-left: 25px;
+  padding-top: 10px;
+  border-radius: 25px;
+  font-size: 25px;
+}
