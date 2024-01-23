@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Javascript Cash Register</title>
+    <link rel="stylesheet" href="./cash register.css" />
+  </head>
+  <body>
+    <main class="container">
+      <div class="price-screen">
+        <div id="price"></div>
+      </div>
+      <div style="width: 8px; height: 18px; background-color: coral"></div>
+      <div class="cash-container">
+        <input type="text" id="cash" />
+        <div class="btn-container">
+          <div class="btn-number-container">
+            <button class="btn-number" onclick="cashInputByButton(1)">1</button>
+            <button class="btn-number" onclick="cashInputByButton(2)">2</button>
+            <button class="btn-number" onclick="cashInputByButton(3)">3</button>
+            <button class="btn-number" onclick="cashInputByButton(4)">4</button>
+            <button class="btn-number" onclick="cashInputByButton(5)">5</button>
+            <button class="btn-number" onclick="cashInputByButton(6)">6</button>
+            <button class="btn-number" onclick="cashInputByButton(7)">7</button>
+            <button class="btn-number" onclick="cashInputByButton(8)">8</button>
+            <button class="btn-number" onclick="cashInputByButton(9)">9</button>
+            <button class="btn-number" onclick="cashInputByButton(0)">0</button>
+            <button class="btn-number" onclick="cashInputByButton('.')">
+              .
+            </button>
+            <button class="btn-number" onclick="deleteCashInput()">
+              Clear
+            </button>
+          </div>
+          <div id="change-due"></div>
+        </div>
+        <button type="button" id="purchase-btn">Change</button>
+      </div>
+    </main>
+    <script>
+      let price = 3.26;
+      let cid = [
+        ["PENNY", 1.01],
+        ["NICKEL", 2.05],
+        ["DIME", 3.1],
+        ["QUARTER", 4.25],
+        ["ONE", 90],
+        ["FIVE", 55],
+        ["TEN", 20],
+        ["TWENTY", 60],
+        ["ONE HUNDRED", 100],
+      ];
+      const priceShow = document.getElementById("price");
+      const cashInput = document.getElementById("cash");
+      const changeDue = document.getElementById("change-due");
+      const purchaseBtn = document.getElementById("purchase-btn");
+
+      priceShow.textContent = `Price: $${price}`;
+
+      purchaseBtn.addEventListener("click", function () {
+        //check if buyer have cash to purchse item or not
+        const refundArr = checkCashAndPrice();
+
+        //if refundArr.length !==0, the cash-in-drawer is able to change money to customer
+        refundArr.length && updateCID(refundArr, cid);
+      });
+      cashInput.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          purchaseBtn.click();
+        }
+      });
+
+      //function delete input value
+      function deleteCashInput() {
+        cashInput.value = "";
+      }
+      //function of showing (cash in drawer as well as refund money)
+      function showCID(arr, node) {
+        let p = document.createElement("p");
+        p.innerText = `${arr[0]}: $${arr[1]}`;
+        node.appendChild(p);
+      }
+
+      //function for checking the cash which received from customer and price of item
+      function checkCashAndPrice() {
+        const cashVal = isNaN(cash.value) ? 0 : Number(cash.value);
+        if (cashVal < price) {
+          alert("Customer does not have enough money to purchase the item");
+        } else if (cashVal === price) {
+          changeDue.textContent =
+            "No change due - customer paid with exact cash";
+        } else {
+          //the value of money that have to refund
+          const change = Number((cashVal - price).toFixed(2));
+          const { status, cidCanChange } = checkMoneyCanChange(change);
+          switch (status) {
+            case "INSUFFICIENT_FUNDS":
+              changeDue.innerHTML = `<p>Status: ${status}</p>`;
+              break;
+            case "OPEN":
+              changeDue.innerHTML = `<p>Status: ${status}</p>`;
+              [...cidCanChange]
+                .reverse()
+                .forEach((item) => showCID(item, changeDue));
+              break;
+            case "CLOSE":
+              changeDue.innerHTML = `<p>Status: OPEN</p>`;
+              [...cidCanChange]
+                .reverse()
+                .forEach((item) => showCID(item, changeDue));
+              break;
+          }
+          return cidCanChange;
+        }
+      }
+
+      //function check the money which exist in cid can be used for change or not
+      function checkMoneyCanChange(val) {
+        // array of currency unit
+        const currencyUnit = [0.01, 0.05, 0.1, 0.25, 1, 5, 10, 20, 100];
+        // find the index of currency unit that lower than change money
+        const indexCurrencyUnitCanChange = currencyUnit.findLastIndex(
+          (item) => item < val
+        );
+        //array of cid that can be used for refund
+        // (using deep copy to prevent auto update of source array)
+        const cidCanChange = cid.map(function (arr) {
+          return arr.slice(0, indexCurrencyUnitCanChange + 1);
+        });
+        //check if the money which exist in cid can be used for refund or not
+        const cidCanChangeSum = Number(
+          [...cidCanChange]
+            .flat()
+            .filter((item) => !isNaN(item))
+            .reduce((total, num) => total + num)
+            .toFixed(2)
+        );
+        //check if cash-in drawer is enough for refund or not
+        if (cidCanChangeSum < val) {
+          return { status: "INSUFFICIENT_FUNDS", cidCanChange: [] };
+        } else if (cidCanChangeSum > val) {
+          // check if cash-in-drawer can be used for change money or not
+          // (examples: 3 papers of one dollars cannot be change for value of 1.2$)
+          const changeMoneyArr = changeMoney(val, cidCanChange);
+          return changeMoneyArr.length //if changeMoneyArr=[], the cid can not be used for refund
+            ? { status: "OPEN", cidCanChange: changeMoneyArr }
+            : { status: "INSUFFICIENT_FUNDS", cidCanChange: changeMoneyArr };
+        } else {
+          return { status: "CLOSE", cidCanChange: cidCanChange };
+        }
+      }
+
+      //function for indentifying the refund money
+      function changeMoney(val, arr) {
+        let cidForChange = [...arr];
+        let change = val;
+        let changeArr = [];
+        // array of currency unit
+        const currencyUnit = [0.01, 0.05, 0.1, 0.25, 1, 5, 10, 20, 100];
+        //array of currency unit that can be used for refund
+        const currencyUnitForRefund = currencyUnit.filter(
+          (item, index) => index < cidForChange.length
+        );
+        for (let i = currencyUnitForRefund.length - 1; i > -1; i--) {
+          let cidForChangeValue = cidForChange[i];
+          if (change === 0) {
+            break;
+          }
+          const intValue = Math.floor(change / currencyUnitForRefund[i]);
+          if (currencyUnitForRefund[i] * intValue > cidForChangeValue[1]) {
+            change = Number((change - cidForChangeValue[1]).toFixed(2));
+            changeArr.unshift(cidForChangeValue);
+          } else {
+            cidForChangeValue[1] = currencyUnitForRefund[i] * intValue;
+            cidForChangeValue[1] !== 0 && changeArr.unshift(cidForChangeValue);
+            change = Number((change - cidForChangeValue[1]).toFixed(2));
+          }
+        }
+        // if change !==0, the cid can be used for refund
+        return change !== 0 ? [] : changeArr;
+      }
+
+      //function for updating cash-in-drawer after refund
+      function updateCID(refundArr, cidArr) {
+        for (let i = 0; i < refundArr.length; i++) {
+          const refundVal = refundArr[i];
+          for (let j = i; j < cidArr.length; j++) {
+            let cidVal = cidArr[j];
+            if (refundVal[0] === cidVal[0]) {
+              cidVal = [
+                cidVal[0],
+                Number((cidVal[1] - refundVal[1]).toFixed(2)),
+              ];
+              cidArr[j] = cidVal;
+              break;
+            }
+          }
+        }
+      }
+
+      //function show value by clicking number button
+      function cashInputByButton(val) {
+        cashInput.value += val;
+      }
+      window.addEventListener("DOMContentLoaded", function () {
+        cash.value = "";
+        cid.forEach((item) => showCID(item, changeDue));
+      });
+    </script>
+  </body>
+</html>
