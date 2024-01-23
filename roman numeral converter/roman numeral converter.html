@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roman Numreal Converter</title>
+    <link rel="stylesheet" href="./roman numeral converter.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Roman Numeral Converter</h1>
+      <fieldset>
+        <label for="number">Enter a number:</label>
+        <br />
+        <input id="number" type="number" />
+        <br />
+        <button id="convert-btn">Converter</button>
+      </fieldset>
+
+      <div id="output"></div>
+    </main>
+
+    <script>
+      const numberInput = document.getElementById("number");
+      const btn = document.getElementById("convert-btn");
+      const output = document.getElementById("output");
+      let number = 0;
+
+      btn.addEventListener("click", function () {
+        let check = true;
+        if (!numberInput.value || isNaN(numberInput.value)) {
+          check = false;
+          output.className = "";
+          output.classList.add("output-error");
+          output.innerHTML = "Please enter a valid number";
+        } else if (!isNaN(numberInput.value)) {
+          if (Number(numberInput.value) < 1) {
+            check = false;
+            output.className = "";
+            output.classList.add("output-error");
+            output.innerHTML =
+              "Please enter a number greater than or equal to 1";
+          } else if (Number(numberInput.value) >= 4000) {
+            check = false;
+            output.className = "";
+            output.classList.add("output-error");
+            output.innerHTML =
+              "Please enter a number less than or equal to 3999";
+          }
+        }
+        if (check) {
+          output.className = "";
+          output.classList.add("output-ok");
+          convert(numberInput.value);
+        }
+      });
+      function convert(text) {
+        const unitArr = [
+          "I",
+          "II",
+          "III",
+          "IV",
+          "V",
+          "VI",
+          "VII",
+          "VIII",
+          "IX",
+        ];
+        const tensArr = [
+          "X",
+          "XX",
+          "XXX",
+          "XL",
+          "L",
+          "LX",
+          "LXX",
+          "LXXX",
+          "XC",
+        ];
+        const hundredsArr = [
+          "C",
+          "CC",
+          "CCC",
+          "CD",
+          "D",
+          "DC",
+          "DCC",
+          "DCCC",
+          "CM",
+        ];
+        const thousandArr = ["M", "MM", "MMM"];
+
+        const romanArr = [unitArr, tensArr, hundredsArr, thousandArr];
+        const arabicArr = [];
+        const convertNum = [];
+
+        for (let i = 0; i < text.length; i++) {
+          arabicArr.push(text.substr(i, 1));
+        }
+        for (let i = 0; i < arabicArr.length; i++) {
+          let index = Number(arabicArr[i]) - 1;
+          convertNum.push(romanArr[arabicArr.length - i - 1][index]);
+        }
+        output.innerHTML = `${convertNum.join("")}`;
+      }
+      window.addEventListener("DOMContentLoaded", function () {
+        numberInput.value = "";
+      });
+    </script>
+  </body>
+</html>
