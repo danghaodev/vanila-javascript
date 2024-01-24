@@ -16,8 +16,9 @@
   </head>
   <body>
     <main class="container">
-      <h1>Check telephone number</h1>
+      <div id="results-div"></div>
       <fieldset>
+        <h1>Check US telephone number</h1>
         <label for="user-input">Enter a phone number:</label>
         <br />
         <span><i class="fa-solid fa-phone"></i></span>
@@ -28,7 +29,37 @@
           <button id="clear-btn" class="btn">Clear</button>
         </div>
       </fieldset>
-      <div id="results-div"></div>
+      <table>
+        <tr>
+          <td><button class="num-btn" onclick="showValue(event)">(</button></td>
+          <td><button class="num-btn" onclick="showValue(event)">)</button></td>
+          <td><button class="num-btn" onclick="showValue(event)">-</button></td>
+        </tr>
+        <tr>
+          <td><button class="num-btn" onclick="showValue(event)">7</button></td>
+          <td><button class="num-btn" onclick="showValue(event)">8</button></td>
+          <td><button class="num-btn" onclick="showValue(event)">9</button></td>
+        </tr>
+        <tr>
+          <td><button class="num-btn" onclick="showValue(event)">4</button></td>
+          <td><button class="num-btn" onclick="showValue(event)">5</button></td>
+          <td><button class="num-btn" onclick="showValue(event)">6</button></td>
+        </tr>
+        <tr>
+          <td><button class="num-btn" onclick="showValue(event)">1</button></td>
+          <td><button class="num-btn" onclick="showValue(event)">2</button></td>
+          <td><button class="num-btn" onclick="showValue(event)">3</button></td>
+        </tr>
+        <tr>
+          <td><button class="num-btn" onclick="showValue(event)">0</button></td>
+          <td>
+            <button class="num-btn" onclick="showValue(event)">space</button>
+          </td>
+          <td>
+            <button class="num-btn" onclick="showValue(event)">del</button>
+          </td>
+        </tr>
+      </table>
     </main>
     <script>
       const userInput = document.getElementById("user-input");
@@ -48,9 +79,9 @@
         //check valid telephone number
         const regex = [case1Regex, case2Regex];
         let check = regex.some((item) => item.test(text));
-        result.textContent = check
-          ? `Valid US number: ${text}`
-          : `Invalid US number: ${text}`;
+        result.innerHTML = check
+          ? `<p><span class="valid-number">Valid US number: </span>${text}</p>`
+          : `<p><span class="invalid-number">Invalid US number: </span>${text}</p>`;
       }
 
       checkBtn.addEventListener("click", function () {
@@ -60,8 +91,33 @@
       });
 
       clearBtn.addEventListener("click", () => {
-        (userInput.value = ""), (result.textContent = "");
+        (userInput.value = ""), (result.innerHTML = "");
       });
+      userInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          checkBtn.click();
+        }
+      });
+      window.addEventListener("load", () => {
+        userInput.value = "";
+      });
+      function showValue(event) {
+        let val = event.target.innerText;
+        switch (val) {
+          case "space":
+            userInput.value = userInput.value + " ";
+            break;
+          case "del":
+            userInput.value = userInput.value.slice(
+              0,
+              userInput.value.length - 1
+            );
+            break;
+          default:
+            userInput.value += val;
+        }
+      }
     </script>
   </body>
 </html>

@@ -34,6 +34,9 @@ body {
   max-width: 750px;
   position: absolute;
   left: calc(50% - 450px / 2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 fieldset {
   margin-top: 25px;
@@ -63,4 +66,33 @@ span {
   color: var(--danger-background);
   background-color: var(--gray-05);
   border-radius: 8px;
+}
+table {
+  margin-top: 25px;
+  border: 1px solid #f5f6f7;
+}
+td {
+  padding: 10px;
+}
+.num-btn {
+  width: 60px;
+  height: 60px;
+  font-size: 20px;
+  color: #f33c3c;
+  background-color: transparent;
+  border-radius: 5px;
+}
+#results-div {
+  font-size: 35px;
+  min-height: 50px;
+}
+#results-div > p {
+  border: 2px solid #ffffff;
+  padding: 0 15px;
+}
+.valid-number {
+  color: green;
+}
+.invalid-number {
+  color: red;
 }
