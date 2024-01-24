@@ -55,6 +55,7 @@ td {
   text-align: center;
   font-size: 18px;
 }
+
 .td-info {
   width: 100%;
 }
@@ -70,11 +71,10 @@ table {
   font-size: 16px;
 }
 .tr-info {
-  width: 345px;
+  width: 100%;
   background-color: var(--violet-);
   text-transform: uppercase;
   color: chartreuse;
-  margin-bottom: 0;
   text-align: center;
 }
 #sprite-container {
